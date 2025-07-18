@@ -38,8 +38,7 @@
             width: 90%;
             max-width: 400px;
         }
-        h1, h3 { color: var(--text-primary); }
-        h3 { margin-top: 20px; margin-bottom: 10px; border-top: 1px solid var(--secondary-color); padding-top: 20px; }
+        h1 { color: var(--text-primary); }
         input[type="text"] {
             border: 1px solid var(--border-color);
             padding: 12px;
@@ -69,27 +68,6 @@
         button:hover {
             background-color: #5d3b7b;
         }
-        .room-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-        .room-list a {
-            display: block;
-            padding: 12px;
-            background-color: var(--secondary-color);
-            margin-bottom: 8px;
-            text-decoration: none;
-            color: var(--text-primary);
-            border-radius: 18px;
-            transition: background-color 0.2s;
-            font-weight: 500;
-        }
-        .room-list a:hover {
-            background-color: #dcdde1;
-        }
     </style>
 </head>
 <body>
@@ -105,7 +83,7 @@
 <script>
     const socket = io();
 
-    function joinRoomPage() {
+    function LogIn() {
         const username = document.getElementById('username').value;
         if (username.trim() === '') {
             alert('Por favor, digite um nome de usuário.');
@@ -115,7 +93,7 @@
     }
 
     document.getElementById('log-in-btn').addEventListener('click', function() {
-        joinRoomPage();
+        LogIn();
     });
 
 </script>

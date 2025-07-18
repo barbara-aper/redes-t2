@@ -28,11 +28,14 @@
             align-items: center;
             height: 100vh;
             box-sizing: border-box;
+            flex-direction: column;
         }
         .lobby-container {
             background-color: var(--container-bg);
             padding: 40px;
             border-radius: 8px;
+            position: relative;
+            justify-content: space-between;
             box-shadow: 0 4px 12px var(--shadow-color);
             text-align: center;
             width: 90%;
@@ -54,7 +57,23 @@
             outline: none;
             border-color: var(--primary-color);
         }
-        button {
+        .leave-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            position: relative;
+            right: 45%;
+            padding: 2.5px 15px;
+            border-radius: 18px;
+            font-size: 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .leave-button:hover {
+            background-color: #5d3b7b;
+        }
+        .my-button {
             background-color: var(--primary-color);
             color: white;
             border: none;
@@ -66,7 +85,7 @@
             transition: background-color 0.2s;
             width: 100%;
         }
-        button:hover {
+        .my-button:hover {
             background-color: #5d3b7b;
         }
         .room-list {
@@ -94,6 +113,7 @@
 </head>
 <body>
     <div class="lobby-container">
+        <button class="leave-button" id="leave-btn">↩</button>
         <h1>Salas de Chat</h1>
         <form id="join-form">
             <h3>Salas Disponíveis</h3>
@@ -108,7 +128,7 @@
             
             <h3>Criar Nova Sala</h3>
             <input type="text" id="new-room-name" placeholder="Nome da nova sala">
-            <button type="button" id="create-room-btn">Criar e Entrar</button>
+            <button class="my-button" id="create-room-btn">Criar e Entrar</button>
         </form>
     </div>
 
@@ -120,6 +140,10 @@
         const username = myUsername;
         window.location.href = `/chat/${roomName}/${username}`;
     }
+
+    document.getElementById('leave-btn').addEventListener('click', function() {
+        window.location.href = `/`;
+    });
 
     document.getElementById('create-room-btn').addEventListener('click', function() {
         const roomName = document.getElementById('new-room-name').value;
@@ -156,7 +180,7 @@
         bindRoomLinks();
     });
 
-    bindRoomLinks(); // Vincula os links iniciais
+    bindRoomLinks();
 </script>
 </body>
 </html>
