@@ -12,6 +12,17 @@ def lobby():
     """
     return render_template("lobby.html", rooms=list(ROOMS))
 
+@main.route("/rooms/<string:username>")
+def rooms(username):
+    """
+    Renderiza a página das salas para um usuário específico.
+    """
+    if username:
+        return render_template("rooms.html", username=username)
+    else:
+        # Se faltar informação, volta para o lobby
+        return redirect(url_for('main.lobby'))
+
 @main.route("/chat/<string:room_name>/<string:username>")
 def chat(room_name, username):
     """

@@ -94,74 +94,30 @@
 </head>
 <body>
     <div class="lobby-container">
-        <h1>Salas de Chat</h1>
+        <h1>Log-in</h1>
         <form id="join-form">
             <input type="text" id="username" placeholder="Digite seu nome de usuário" required>
-            
-            <h3>Salas Disponíveis</h3>
-            <ul id="room-list" class="room-list">
-                {% if not rooms %}
-                    <li>Nenhuma sala criada.</li>
-                {% endif %}
-                {% for room in rooms %}
-                    <li><a href="#" class="join-room-link" data-room="{{ room }}">{{ room }}</a></li>
-                {% endfor %}
-            </ul>
-            
-            <h3>Criar Nova Sala</h3>
-            <input type="text" id="new-room-name" placeholder="Nome da nova sala">
-            <button type="button" id="create-room-btn">Criar e Entrar</button>
+
+            <button type="button" id="log-in-btn">Entrar</button>
         </form>
     </div>
 
 <script>
     const socket = io();
 
-    function joinRoom(roomName) {
+    function joinRoomPage() {
         const username = document.getElementById('username').value;
         if (username.trim() === '') {
             alert('Por favor, digite um nome de usuário.');
             return;
         }
-        window.location.href = `/chat/${roomName}/${username}`;
+        window.location.href = `/rooms/${username}`;
     }
 
-    document.getElementById('create-room-btn').addEventListener('click', function() {
-        const roomName = document.getElementById('new-room-name').value;
-        if (roomName.trim() === '') {
-            alert('Por favor, digite um nome para a nova sala.');
-            return;
-        }
-        socket.emit('create_room', roomName);
-        joinRoom(roomName);
-    });
-    
-    function bindRoomLinks() {
-        document.querySelectorAll('.join-room-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const roomName = this.getAttribute('data-room');
-                joinRoom(roomName);
-            });
-        });
-    }
-    
-    socket.on('update_room_list', function(rooms) {
-        const roomList = document.getElementById('room-list');
-        roomList.innerHTML = '';
-        if (rooms.length === 0) {
-            roomList.innerHTML = '<li>Nenhuma sala criada.</li>';
-        } else {
-            rooms.forEach(room => {
-                const li = document.createElement('li');
-                li.innerHTML = `<a href="#" class="join-room-link" data-room="${room}">${room}</a>`;
-                roomList.appendChild(li);
-            });
-        }
-        bindRoomLinks();
+    document.getElementById('log-in-btn').addEventListener('click', function() {
+        joinRoomPage();
     });
 
-    bindRoomLinks(); // Vincula os links iniciais
 </script>
 </body>
 </html>

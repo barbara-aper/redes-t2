@@ -160,7 +160,7 @@
 
     document.getElementById('leave-room-btn').addEventListener('click', function() {
         socket.emit('leave', { username: myUsername, room: roomName });
-        window.location.href = `/`;
+        window.location.href = `/rooms/${myUsername}`;
     });
 
     // Envia a mensagem
