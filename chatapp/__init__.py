@@ -1,15 +1,19 @@
-from flask import Flask 
+# /chatapp/__init__.py
 
-from .events import socketio
-from .routes import main 
+from flask import Flask
+from .extensions import socketio
 
 def create_app():
     app = Flask(__name__)
-    app.config["DEBUG"] = True
-    app.config["SECRET_KEY"] = "secret"
-
-    app.register_blueprint(main)
+    app.config['SECRET_KEY'] = 'seu_segredo_super_secreto_aqui!'
 
     socketio.init_app(app)
+
+    # Importa e registra as rotas do lobby e do chat
+    from .routes import main as main_blueprint
+    app.register_blueprint(main_blueprint)
+
+    # Importa os eventos de tempo real para registrá-los
+    from . import events
 
     return app

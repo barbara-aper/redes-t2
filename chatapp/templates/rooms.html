@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lobby do Chat</title>
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+        :root {
+            --background-color: #f0f2f5;
+            --container-bg: #ffffff;
+            --primary-color: #7d4fa6;
+            --secondary-color: #e4e6eb;
+            --text-primary: #050505;
+            --text-secondary: #65676b;
+            --border-color: #ced0d4;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+        .lobby-container {
+            background-color: var(--container-bg);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+        h1, h3 { color: var(--text-primary); }
+        h3 { margin-top: 20px; margin-bottom: 10px; border-top: 1px solid var(--secondary-color); padding-top: 20px; }
+        input[type="text"] {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 18px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+            margin-bottom: 10px;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 18px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #5d3b7b;
+        }
+        .room-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .room-list a {
+            display: block;
+            padding: 12px;
+            background-color: var(--secondary-color);
+            margin-bottom: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+            border-radius: 18px;
+            transition: background-color 0.2s;
+            font-weight: 500;
+        }
+        .room-list a:hover {
+            background-color: #dcdde1;
+        }
+    </style>
+</head>
+<body>
+    <div class="lobby-container">
+        <h1>Salas de Chat</h1>
+        <form id="join-form">
+            <h3>Salas Disponíveis</h3>
+            <ul id="room-list" class="room-list">
+                {% if not rooms %}
+                    <li>Nenhuma sala criada.</li>
+                {% endif %}
+                {% for room in rooms %}
+                    <li><a href="#" class="join-room-link" data-room="{{ room }}">{{ room }}</a></li>
+                {% endfor %}
+            </ul>
+            
+            <h3>Criar Nova Sala</h3>
+            <input type="text" id="new-room-name" placeholder="Nome da nova sala">
+            <button type="button" id="create-room-btn">Criar e Entrar</button>
+        </form>
+    </div>
+
+<script>
+    const socket = io();
+
+    function joinRoom(roomName) {
+        const username = document.getElementById('username').value;
+        if (username.trim() === '') {
+            alert('Por favor, digite um nome de usuário.');
+            return;
+        }
+        window.location.href = `/chat/${roomName}/${username}`;
+    }
+
+    document.getElementById('create-room-btn').addEventListener('click', function() {
+        const roomName = document.getElementById('new-room-name').value;
+        if (roomName.trim() === '') {
+            alert('Por favor, digite um nome para a nova sala.');
+            return;
+        }
+        socket.emit('create_room', roomName);
+        joinRoom(roomName);
+    });
+    
+    function bindRoomLinks() {
+        document.querySelectorAll('.join-room-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const roomName = this.getAttribute('data-room');
+                joinRoom(roomName);
+            });
+        });
+    }
+    
+    socket.on('update_room_list', function(rooms) {
+        const roomList = document.getElementById('room-list');
+        roomList.innerHTML = '';
+        if (rooms.length === 0) {
+            roomList.innerHTML = '<li>Nenhuma sala criada.</li>';
+        } else {
+            rooms.forEach(room => {
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="#" class="join-room-link" data-room="${room}">${room}</a>`;
+                roomList.appendChild(li);
+            });
+        }
+        bindRoomLinks();
+    });
+
+    bindRoomLinks(); // Vincula os links iniciais
+</script>
+</body>
+</html>
