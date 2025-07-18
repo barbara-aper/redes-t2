@@ -69,11 +69,12 @@
             font-weight: 500;
             cursor: pointer;
             transition: background-color 0.2s;
+            width: fit-content;
         }
         .leave-button:hover {
             background-color: #5d3b7b;
         }
-        .my-button {
+        button {
             background-color: var(--primary-color);
             color: white;
             border: none;
@@ -85,7 +86,7 @@
             transition: background-color 0.2s;
             width: 100%;
         }
-        .my-button:hover {
+        button:hover {
             background-color: #5d3b7b;
         }
         .room-list {
@@ -128,7 +129,7 @@
             
             <h3>Criar Nova Sala</h3>
             <input type="text" id="new-room-name" placeholder="Nome da nova sala">
-            <button class="my-button" id="create-room-btn">Criar e Entrar</button>
+            <button type="button" id="create-room-btn">Criar e Entrar</button>
         </form>
     </div>
 
@@ -151,7 +152,7 @@
             alert('Por favor, digite um nome para a nova sala.');
             return;
         }
-        socket.emit('create_room', roomName);
+        socket.emit('create_room', roomName);      
         joinRoom(roomName);
     });
     
