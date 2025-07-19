@@ -28,8 +28,8 @@ def chat(room_name, username):
     """
     Renderiza a página do chat para uma sala e usuário específicos.
     """
-    if room_name and username:
+    if room_name in ROOMS and username:
         return render_template("chat.html", room_name=room_name, username=username)
     else:
-        # Se faltar informação, volta para o lobby
-        return redirect(url_for('main.lobby'))
+        # Se faltar informação, volta para o Rooms
+        return redirect(url_for('main.rooms', username=username))
