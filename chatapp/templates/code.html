@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salas</title>
+    <title>Senha - {{ room_name }}</title>
     <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
@@ -28,14 +28,11 @@
             align-items: center;
             height: 100vh;
             box-sizing: border-box;
-            flex-direction: column;
         }
-        .room-container {
+        .code-container {
             background-color: var(--container-bg);
             padding: 40px;
             border-radius: 8px;
-            position: relative;
-            justify-content: space-between;
             box-shadow: 0 4px 12px var(--shadow-color);
             text-align: center;
             width: 90%;
@@ -56,6 +53,16 @@
         input[type="text"]:focus {
             outline: none;
             border-color: var(--primary-color);
+        }
+        .input-group {
+            width: 100%;
+            text-align: left;
+        }
+        .input-group label {
+            display: block; 
+            margin-bottom: 5px; 
+            font-weight: 200;
+            color: var(--text-secondary)
         }
         .leave-button {
             background-color: var(--primary-color);
@@ -89,53 +96,27 @@
         button:hover {
             background-color: #5d3b7b;
         }
-        .room-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-        .room-list a {
-            display: block;
-            padding: 12px;
-            background-color: var(--secondary-color);
-            margin-bottom: 8px;
-            text-decoration: none;
-            color: var(--text-primary);
-            border-radius: 18px;
-            transition: background-color 0.2s;
-            font-weight: 500;
-        }
-        .room-list a:hover {
-            background-color: #dcdde1;
-        }
     </style>
 </head>
 <body>
-    <div class="room-container">
+    <div class="code-container">
         <button class="leave-button" id="leave-btn">↩</button>
-        <h1>Salas de Chat</h1>
+        <h1>Log-In</h1>
+        <h3>Sala: {{ room_name }}</h3>
         <form id="join-form">
-            <h3>Salas Disponíveis</h3>
-            <ul id="room-list" class="room-list">
-                {% if not rooms %}
-                    <li>Nenhuma sala criada.</li>
-                {% endif %}
-                {% for room in rooms %}
-                    <li><a href="#" class="join-room-link" data-room="{{ room }}">{{ room }}</a></li>
-                {% endfor %}
-            </ul>
-            
-            <h3>Criar Nova Sala</h3>
-            <input type="text" id="new-room-name" placeholder="Nome da nova sala">
-            <input type="text" id="new-room-code" placeholder="Senha da nova sala (opcional)">
-            <button type="button" id="create-room-btn">Criar e Entrar</button>
+            <div class="input-group">
+                <label for="username">Digite a senha da sala:</label>
+                <input type="text" id="new-room-code" placeholder="Senha">
+            </div>
+            <button type="button" id="log-in-btn">Entrar</button>
         </form>
     </div>
 
 <script>
     const socket = io();
+
+    // Pega o nome da sala e do usuário das variáveis do Jinja2
+    const roomName = "{{ room_name }}";
     const myUsername = "{{ username }}";
 
     function joinRoom(roomName) {
@@ -143,60 +124,27 @@
         window.location.href = `/chat/${roomName}/${username}`;
     }
 
-    function joinCodeRoom(roomName) {
-        const username = myUsername;
-        window.location.href = `/code/${roomName}/${username}`;
-    }
-
     document.getElementById('leave-btn').addEventListener('click', function() {
-        window.location.href = `/`;
+        window.location.href = `/rooms/${myUsername}`;
     });
 
-    document.getElementById('create-room-btn').addEventListener('click', function() {
-        const roomName = document.getElementById('new-room-name').value;
+    socket.on("code_is_verified", function(answer){
+        if(answer[1] == true){
+            joinRoom(answer[0]);
+        }else{
+            alert('Senha incorreta! Tente novamente');
+        }
+    });
+
+    document.getElementById('log-in-btn').addEventListener('click', function() {
         const roomCode = document.getElementById('new-room-code').value;
-        if (roomName.trim() === '') {
-            alert('Por favor, digite um nome para a nova sala.');
+        if (roomCode.trim() === '') {
+            alert('Por favor, digite uma senha para a sala.');
             return;
         }
-        socket.emit('create_room', roomName, roomCode);      
-        joinRoom(roomName);
-    });
-
-    socket.on("code_is_required", function(answer){
-        if(answer[1] == true){
-            joinCodeRoom(answer[0]);
-        }else{
-            joinRoom(answer[0]);
-        }
+        socket.emit('code_verify', roomName, roomCode)
     });
     
-    function bindRoomLinks() {
-        document.querySelectorAll('.join-room-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const roomName = this.getAttribute('data-room');
-                socket.emit('code_required', roomName)
-            });
-        });
-    }
-    
-    socket.on('update_room_list', function(rooms) {
-        const roomList = document.getElementById('room-list');
-        roomList.innerHTML = '';
-        if (rooms.length === 0) {
-            roomList.innerHTML = '<li>Nenhuma sala criada.</li>';
-        } else {
-            rooms.forEach(room => {
-                const li = document.createElement('li');
-                li.innerHTML = `<a href="#" class="join-room-link" data-room="${room}">${room}</a>`;
-                roomList.appendChild(li);
-            });
-        }
-        bindRoomLinks();
-    });
-
-    bindRoomLinks();
 </script>
 </body>
 </html>

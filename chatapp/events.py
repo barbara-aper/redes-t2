@@ -4,8 +4,9 @@ from flask import request
 from .extensions import socketio
 from flask_socketio import emit, join_room, leave_room
 
-# Usamos um SET para armazenar as salas ativas de forma global
-ROOMS = set()
+# Usamos uma lista para armazenar as salas ativas de forma global e suas senhas
+ROOMS = []
+Codes = []
 
 @socketio.on("connect")
 def handle_connect():
@@ -16,12 +17,13 @@ def handle_connect():
     emit("update_room_list", list(ROOMS))
 
 @socketio.on('create_room')
-def handle_create_room(room_name):
+def handle_create_room(room_name, room_code):
     """
     Cria uma nova sala e atualiza a lista para todos os clientes.
     """
     if room_name not in ROOMS:
-        ROOMS.add(room_name)
+        ROOMS.append(room_name)
+        Codes.append(room_code)
         # broadcast=True garante que todos os clientes recebam a lista atualizada
         emit('update_room_list', list(ROOMS), broadcast=True)
     print(f"Sala criada: {room_name}. Salas atuais: {ROOMS}")
@@ -70,3 +72,31 @@ def handle_new_message(data):
     """
     room = data.get('room')
     emit("chat", data, to=room) # Envia a mensagem apenas para a sala correta
+
+@socketio.on("code_required")
+def handle_code_required(room_name):
+    index = ROOMS.index(room_name)
+    code = Codes[index]
+    answer = []
+    answer.append(room_name)
+
+    if code == '':
+        answer.append(False)
+    else:
+        answer.append(True)
+    
+    emit("code_is_required", answer)
+
+@socketio.on("code_verify")
+def handle_code_verify(room_name, room_code):
+    index = ROOMS.index(room_name)
+    code = Codes[index]
+    answer = []
+    answer.append(room_name)
+
+    if code == room_code:
+        answer.append(True)
+    else:
+        answer.append(False)
+
+    emit("code_is_verified", answer)

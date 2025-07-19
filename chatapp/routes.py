@@ -33,3 +33,14 @@ def chat(room_name, username):
     else:
         # Se faltar informação, volta para o Rooms
         return redirect(url_for('main.rooms', username=username))
+
+@main.route("/code/<string:room_name>/<string:username>")
+def code(room_name, username):
+    """
+    Renderiza a página de solicitação de senha para uma sala e usuário específicos.
+    """
+    if room_name in ROOMS and username:
+        return render_template("code.html", room_name=room_name, username=username)
+    else:
+        # Se faltar informação, volta para o Rooms
+        return redirect(url_for('main.rooms', username=username))
