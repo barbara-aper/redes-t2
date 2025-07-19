@@ -50,6 +50,12 @@
             transition: border-color 0.2s;
             margin-bottom: 10px;
         }
+        h1 {
+            position: absolute;
+            top: 34%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
         input[type="text"]:focus {
             outline: none;
             border-color: var(--primary-color);
@@ -101,12 +107,12 @@
 <body>
     <div class="code-container">
         <button class="leave-button" id="leave-btn">↩</button>
-        <h1>Log-In</h1>
-        <h3>Sala: {{ room_name }}</h3>
+        <h1>Sala privada</h1>
+        <h3>{{ room_name }}</h3>
         <form id="join-form">
             <div class="input-group">
-                <label for="username">Digite a senha da sala:</label>
-                <input type="text" id="new-room-code" placeholder="Senha">
+                <label for="username">Senha da sala:</label>
+                <input type="text" id="new-room-code" placeholder="Digite a senha da sala">
             </div>
             <button type="button" id="log-in-btn">Entrar</button>
         </form>

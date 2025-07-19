@@ -53,6 +53,16 @@
             outline: none;
             border-color: var(--primary-color);
         }
+                .input-group {
+            width: 100%;
+            text-align: left;
+        }
+        .input-group label {
+            display: block; 
+            margin-bottom: 5px; 
+            font-weight: 200;
+            color: var(--text-secondary)
+        }
         button {
             background-color: var(--primary-color);
             color: white;
@@ -73,10 +83,12 @@
 <body>
     <div class="lobby-container">
         <img src="{{ url_for('static', filename='imgs/ABCHAT.png') }}" alt="Logotipo do ABCHAT">
-        <h1>Log-In</h1>
+        <h1>Bem-vindo!</h1>
         <form id="join-form">
-            <input type="text" id="username" placeholder="Digite seu nome de usuário" required>
-
+            <div class="input-group">
+                <label for="username">Nome de usuário:</label>
+                <input type="text" id="username" placeholder="Digite o seu nome de usuário">
+            </div>
             <button type="button" id="log-in-btn">Entrar</button>
         </form>
     </div>

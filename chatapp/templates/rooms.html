@@ -42,7 +42,14 @@
             max-width: 400px;
         }
         h1, h3 { color: var(--text-primary); }
-        h3 { margin-top: 20px; margin-bottom: 10px; border-top: 1px solid var(--secondary-color); padding-top: 20px; }
+        h3 { margin-top: 20px; margin-bottom: 10px; border-top: 1px solid var(--secondary-color); padding-top: 20px; 
+        }
+        h1 {
+            position: absolute;
+            top: 5.5%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
         input[type="text"] {
             border: 1px solid var(--border-color);
             padding: 12px;
@@ -56,6 +63,16 @@
         input[type="text"]:focus {
             outline: none;
             border-color: var(--primary-color);
+        }
+                .input-group {
+            width: 100%;
+            text-align: left;
+        }
+        .input-group label {
+            display: block; 
+            margin-bottom: 5px; 
+            font-weight: 200;
+            color: var(--text-secondary)
         }
         .leave-button {
             background-color: var(--primary-color);
@@ -128,8 +145,12 @@
             </ul>
             
             <h3>Criar Nova Sala</h3>
-            <input type="text" id="new-room-name" placeholder="Nome da nova sala">
-            <input type="text" id="new-room-code" placeholder="Senha da nova sala (opcional)">
+                 <div class="input-group">
+                    <label for="new-room-name">Nome da sala:</label>
+                    <input type="text" id="new-room-name" placeholder="Digite o nome da nova sala">
+                    <label for="new-room-code">Senha da sala:</label>
+                    <input type="text" id="new-room-code" placeholder="Digite a senha da nova sala (opcional)">
+                </div>
             <button type="button" id="create-room-btn">Criar e Entrar</button>
         </form>
     </div>
