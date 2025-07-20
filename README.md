@@ -30,7 +30,7 @@ Abra o server no seu navegador com o link para a porta 5000: http://seu_ip:5000 
 - caso vocês já estejam em uma mesma rede, todos poderão acessar ao sistema com o ip da pessoa que executou o arquivo no link http://ip:5000 . 
 
 ## Funcionalidades Implementadas
-- página de login (cliente informa seu nome de usuário)
+- login (cliente informa seu nome de usuário)
 - criar, listar, entrar e sair de salas de chat
 - comunicação via mensagem de texto entre diferentes usuários logados em uma mesma sala de chat
 - salas privadas (com senha)
