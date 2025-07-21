@@ -191,7 +191,8 @@
             alert('Por favor, digite um nome para a nova sala.');
             return;
         }
-        socket.emit('create_room', roomName, roomCode);      
+        socket.emit('create_room', roomName, roomCode);
+        alert('Sala criada com sucesso! Você será direcionado para o chat');
         joinRoom(roomName);
     });
 
