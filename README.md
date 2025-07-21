@@ -16,6 +16,12 @@ Todos os requisitos estão informados no arquivo "requirements.txt".
 git clone <URL_DO_REPOSITORIO>
 
 2- Instale as dependências:
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -r requirements.txt
+
+ou
+
 pip install -r requirements.txt
 
 3- Execute:
