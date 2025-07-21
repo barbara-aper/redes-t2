@@ -1,3 +1,4 @@
+<!-- pagina de menu de salas de chat -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -74,6 +75,7 @@
             font-weight: 200;
             color: var(--text-secondary)
         }
+        /* botão de retorno à tela anterior */
         .leave-button {
             background-color: var(--primary-color);
             color: white;
@@ -91,6 +93,7 @@
         .leave-button:hover {
             background-color: #5d3b7b;
         }
+        /* botão de criação de sala */
         button {
             background-color: var(--primary-color);
             color: white;
@@ -131,6 +134,7 @@
 </head>
 <body>
     <div class="room-container">
+        <!-- botão de retorno à tela anterior -->
         <button class="leave-button" id="leave-btn">↩</button>
         <h1>Salas de Chat</h1>
         <form id="join-form">
@@ -151,27 +155,30 @@
                     <label for="new-room-code">Senha da sala:</label>
                     <input type="text" id="new-room-code" placeholder="Digite a senha da nova sala (opcional)">
                 </div>
+            <!-- botão de criação de sala -->
             <button type="button" id="create-room-btn">Criar e Entrar</button>
         </form>
     </div>
 
 <script>
     const socket = io();
+
+    // Pega o nome do usuário das variáveis do Jinja2
     const myUsername = "{{ username }}";
 
-    // Leva o cliente para a sala infromada
+    // Leva o cliente para a sala informada
     function joinRoom(roomName) {
         const username = myUsername;
         window.location.href = `/chat/${roomName}/${username}`;
     }
 
-    // Leva o cliente para a tela onde será informado o código
+    // Leva o cliente para a tela onde será informado a senha para sala privada
     function joinCodeRoom(roomName) {
         const username = myUsername;
         window.location.href = `/code/${roomName}/${username}`;
     }
 
-    // Leva o cliente para a tela inicial
+    // Leva o cliente para a tela inicial (de login)
     document.getElementById('leave-btn').addEventListener('click', function() {
         window.location.href = `/`;
     });
@@ -188,7 +195,7 @@
         joinRoom(roomName);
     });
 
-    // Trata os casos de uma sala comum e de uma sala privada
+    // Trata os casos de uma sala comum e de uma sala privada (avalia necessidade de código)
     socket.on("code_is_required", function(answer){
         if(answer[1] == true){
             joinCodeRoom(answer[0]);
@@ -197,7 +204,7 @@
         }
     });
     
-    // Ao clicar numa sala é verificado se ela precisa de código
+    // Ao clicar numa sala é emitido evento que verifica se ela precisa de código
     function bindRoomLinks() {
         document.querySelectorAll('.join-room-link').forEach(link => {
             link.addEventListener('click', function(e) {

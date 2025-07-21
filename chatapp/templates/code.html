@@ -1,3 +1,4 @@
+<!--pagina de preenchimento de senha para salas de chat privadas-->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -70,6 +71,7 @@
             font-weight: 200;
             color: var(--text-secondary)
         }
+        /* botão de retorno à tela anterior */
         .leave-button {
             background-color: var(--primary-color);
             color: white;
@@ -87,6 +89,7 @@
         .leave-button:hover {
             background-color: #5d3b7b;
         }
+        /* botão de envio e confirmação de senha */
         button {
             background-color: var(--primary-color);
             color: white;
@@ -106,6 +109,7 @@
 </head>
 <body>
     <div class="code-container">
+        <!-- botão de retorno à tela anterior -->
         <button class="leave-button" id="leave-btn">↩</button>
         <h1>Sala privada</h1>
         <h3>{{ room_name }}</h3>
@@ -114,6 +118,7 @@
                 <label for="username">Senha da sala:</label>
                 <input type="text" id="new-room-code" placeholder="Digite a senha da sala">
             </div>
+            <!-- botão de envio e confirmação de senha -->
             <button type="button" id="join-btn">Entrar</button>
         </form>
     </div>
@@ -125,18 +130,18 @@
     const roomName = "{{ room_name }}";
     const myUsername = "{{ username }}";
 
-    // Leva cliente para a sala
+    // Leva cliente para a sala privada
     function joinRoom(roomName) {
         const username = myUsername;
         window.location.href = `/chat/${roomName}/${username}`;
     }
 
-    // Tira cliente da sala e retorna pro menu de escolha
+    // Tira cliente da sala de preechimento de senha e retorna pro menu de salas disponiveis
     document.getElementById('leave-btn').addEventListener('click', function() {
         window.location.href = `/rooms/${myUsername}`;
     });
 
-    // Verifica o código para uma sala privada e libera cliente se estiver correto
+    // Verifica a senha para uma sala privada e libera cliente se estiver correta
     socket.on("code_is_verified", function(answer){
         if(answer[1] == true){
             joinRoom(answer[0]);
@@ -145,7 +150,7 @@
         }
     });
 
-    // Recebe um código para ser verificado
+    // Recebe uma senha para ser verificada
     document.getElementById('join-btn').addEventListener('click', function() {
         const roomCode = document.getElementById('new-room-code').value;
         if (roomCode.trim() === '') {

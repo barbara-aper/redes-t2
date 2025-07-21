@@ -1,5 +1,3 @@
-# /chatapp/events.py
-
 from flask import request
 from .extensions import socketio
 from flask_socketio import emit, join_room, leave_room
@@ -11,7 +9,7 @@ Codes = []
 @socketio.on("connect")
 def handle_connect():
     """
-    Envia a lista de salas para um cliente que acaba de se conectar.
+    Envia a lista de salas para um cliente que acaba de se conectar
     """
     print(f"Cliente conectado: {request.sid}")
     emit("update_room_list", list(ROOMS))
@@ -19,11 +17,11 @@ def handle_connect():
 @socketio.on('create_room')
 def handle_create_room(room_name, room_code):
     """
-    Cria uma nova sala e atualiza a lista para todos os clientes.
+    Cria uma nova sala e atualiza a lista para todos os clientes
     """
     if room_name not in ROOMS:
         ROOMS.append(room_name)
-        Codes.append(room_code)
+        Codes.append(room_code) # armazena senha da sala, mesmos e for senha vazia
         # broadcast=True garante que todos os clientes recebam a lista atualizada
         emit('update_room_list', list(ROOMS), broadcast=True)
     print(f"Sala criada: {room_name}. Salas atuais: {ROOMS}")
@@ -31,7 +29,7 @@ def handle_create_room(room_name, room_code):
 @socketio.on("join")
 def handle_join(data):
     """
-    Adiciona um usuário a uma sala específica.
+    Adiciona um usuário a uma sala específica
     """
     username = data.get('username')
     room = data.get('room')
@@ -50,7 +48,7 @@ def handle_join(data):
 @socketio.on("leave")
 def handle_leave(data):
     """
-    Remove um usuário de uma sala.
+    Remove um usuário de uma sala
     """
     username = data.get('username')
     room = data.get('room')
@@ -68,7 +66,7 @@ def handle_leave(data):
 @socketio.on("new_message")
 def handle_new_message(data):
     """
-    Recebe uma nova mensagem e a retransmite para a sala correta.
+    Recebe uma nova mensagem e a retransmite para a sala correta
     """
     room = data.get('room')
     emit("chat", data, to=room) # Envia a mensagem apenas para a sala correta
@@ -76,7 +74,7 @@ def handle_new_message(data):
 @socketio.on("code_required")
 def handle_code_required(room_name):
     """
-    Verifica se a sala acessada é privada ou não.
+    Verifica se a sala acessada é privada ou não
     """
     index = ROOMS.index(room_name)
     code = Codes[index]
@@ -88,12 +86,13 @@ def handle_code_required(room_name):
     else:
         answer.append(True)
     
+    # Envia a quem solicitou o evento "code_required" a resposta sobre a necessidade de senha para a sala
     emit("code_is_required", answer)
 
 @socketio.on("code_verify")
 def handle_code_verify(room_name, room_code):
     """
-    Verifica se o código entrado para uma sala é o correto.
+    Verifica se o código entrado para uma sala é o correto
     """
     index = ROOMS.index(room_name)
     code = Codes[index]
@@ -105,4 +104,5 @@ def handle_code_verify(room_name, room_code):
     else:
         answer.append(False)
 
+    # Envia a quem solicitou o evento "code_verify" se a senha está correta ou não
     emit("code_is_verified", answer)

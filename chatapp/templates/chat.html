@@ -1,3 +1,4 @@
+<!--pagina de chat (sala de chat)-->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -63,7 +64,7 @@
             font-weight: 600;
             color: var(--text-primary);
         }
-
+        /* botão de retorno à tela anterior */
         button {
             background-color: var(--primary-color);
             color: white;
@@ -132,12 +133,14 @@
 <body>
     <div id="chat">
         <div class="chat-header">
+            <!-- botão de retorno à tela anterior -->
             <button type="button" id="leave-room-btn">↩</button>
             <h2>{{ room_name }}</h2>
         </div>
         <ul id="chat-messages">
             </ul>
         <form id="message-form" action="#">
+            <!-- caixa de texto de mensagem do chat -->
             <input type="text" id="message" placeholder="Digite uma mensagem" autocomplete="off">
         </form>
     </div>
@@ -158,6 +161,7 @@
         socket.emit('join', { username: myUsername, room: roomName });
     });
 
+    // Clicar para voltar à sala anterior
     document.getElementById('leave-room-btn').addEventListener('click', function() {
         socket.emit('leave', { username: myUsername, room: roomName });
         window.location.href = `/rooms/${myUsername}`;

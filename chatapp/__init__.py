@@ -1,5 +1,3 @@
-# /chatapp/__init__.py
-
 from flask import Flask
 from .extensions import socketio
 
@@ -9,7 +7,7 @@ def create_app():
 
     socketio.init_app(app)
 
-    # Importa e registra as rotas do lobby e do chat
+    # Importa e registra as rotas das salas de lobby, chat, preenchimento de senha e menu de salas
     from .routes import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
