@@ -45,3 +45,4 @@ Abra o server no seu navegador com o link para a porta 5000: http://seu_ip:5000 
 - Excluir uma sala de chat
 - Exibir os usuários logados em uma sala
 - Adicionar um botão de envio de mensagem na caixa de texto do chat
+- Tecla de Enter funcional
