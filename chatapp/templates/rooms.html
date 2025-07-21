@@ -159,20 +159,24 @@
     const socket = io();
     const myUsername = "{{ username }}";
 
+    // Leva o cliente para a sala infromada
     function joinRoom(roomName) {
         const username = myUsername;
         window.location.href = `/chat/${roomName}/${username}`;
     }
 
+    // Leva o cliente para a tela onde será informado o código
     function joinCodeRoom(roomName) {
         const username = myUsername;
         window.location.href = `/code/${roomName}/${username}`;
     }
 
+    // Leva o cliente para a tela inicial
     document.getElementById('leave-btn').addEventListener('click', function() {
         window.location.href = `/`;
     });
 
+    // Cria uma sala com nome e código, se o último for informado
     document.getElementById('create-room-btn').addEventListener('click', function() {
         const roomName = document.getElementById('new-room-name').value;
         const roomCode = document.getElementById('new-room-code').value;
@@ -184,6 +188,7 @@
         joinRoom(roomName);
     });
 
+    // Trata os casos de uma sala comum e de uma sala privada
     socket.on("code_is_required", function(answer){
         if(answer[1] == true){
             joinCodeRoom(answer[0]);
@@ -192,6 +197,7 @@
         }
     });
     
+    // Ao clicar numa sala é verificado se ela precisa de código
     function bindRoomLinks() {
         document.querySelectorAll('.join-room-link').forEach(link => {
             link.addEventListener('click', function(e) {
@@ -202,6 +208,7 @@
         });
     }
     
+    // Atualiza a lista de salas para que todos os usuários tenham a versão mais recente
     socket.on('update_room_list', function(rooms) {
         const roomList = document.getElementById('room-list');
         roomList.innerHTML = '';

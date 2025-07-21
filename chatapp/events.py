@@ -36,7 +36,7 @@ def handle_join(data):
     username = data.get('username')
     room = data.get('room')
     
-    join_room(room) # Função chave do SocketIO para entrar em uma sala
+    join_room(room) 
     
     print(f"Usuário {username} entrou na sala {room}")
     
@@ -75,6 +75,9 @@ def handle_new_message(data):
 
 @socketio.on("code_required")
 def handle_code_required(room_name):
+    """
+    Verifica se a sala acessada é privada ou não.
+    """
     index = ROOMS.index(room_name)
     code = Codes[index]
     answer = []
@@ -89,6 +92,9 @@ def handle_code_required(room_name):
 
 @socketio.on("code_verify")
 def handle_code_verify(room_name, room_code):
+    """
+    Verifica se o código entrado para uma sala é o correto.
+    """
     index = ROOMS.index(room_name)
     code = Codes[index]
     answer = []

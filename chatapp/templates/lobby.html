@@ -96,6 +96,7 @@
 <script>
     const socket = io();
 
+    // Leva o usuário para o menu de salas ao receber um nome de usuário
     function LogIn() {
         const username = document.getElementById('username').value;
         if (username.trim() === '') {
@@ -105,6 +106,7 @@
         window.location.href = `/rooms/${username}`;
     }
 
+    // Botão de cadastro
     document.getElementById('log-in-btn').addEventListener('click', function() {
         LogIn();
     });

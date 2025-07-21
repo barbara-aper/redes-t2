@@ -114,7 +114,7 @@
                 <label for="username">Senha da sala:</label>
                 <input type="text" id="new-room-code" placeholder="Digite a senha da sala">
             </div>
-            <button type="button" id="log-in-btn">Entrar</button>
+            <button type="button" id="join-btn">Entrar</button>
         </form>
     </div>
 
@@ -125,15 +125,18 @@
     const roomName = "{{ room_name }}";
     const myUsername = "{{ username }}";
 
+    // Leva cliente para a sala
     function joinRoom(roomName) {
         const username = myUsername;
         window.location.href = `/chat/${roomName}/${username}`;
     }
 
+    // Tira cliente da sala e retorna pro menu de escolha
     document.getElementById('leave-btn').addEventListener('click', function() {
         window.location.href = `/rooms/${myUsername}`;
     });
 
+    // Verifica o código para uma sala privada e libera cliente se estiver correto
     socket.on("code_is_verified", function(answer){
         if(answer[1] == true){
             joinRoom(answer[0]);
@@ -142,7 +145,8 @@
         }
     });
 
-    document.getElementById('log-in-btn').addEventListener('click', function() {
+    // Recebe um código para ser verificado
+    document.getElementById('join-btn').addEventListener('click', function() {
         const roomCode = document.getElementById('new-room-code').value;
         if (roomCode.trim() === '') {
             alert('Por favor, digite uma senha para a sala.');

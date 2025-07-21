@@ -5,7 +5,7 @@ from .extensions import socketio
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'seu_segredo_super_secreto_aqui!'
+    app.config['SECRET_KEY'] = 'barline'
 
     socketio.init_app(app)
 
